@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import cores from "./cores";
+import Color from "./Colors";
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const Tarefa = (props) => {
@@ -10,19 +10,13 @@ const Tarefa = (props) => {
             <View style={styles.esquerdaItemTarefa}>
                 <Text>{props.text}</Text>
             </View>
-
-            <View>
-                <Text style={styles.data}>{ }</Text>
-            </View>
-
-
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     item: {
-        backgroundColor: cores.branco,
+        backgroundColor: Color.branco,
         padding: 15,
         borderRadius: 10,
         flexDirection: 'row',
@@ -31,7 +25,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     itemConcluido: {
-        backgroundColor: cores.bgTarefaConcluida,
+        backgroundColor: Color.bgTarefaConcluida,
         padding: 15,
         borderRadius: 10,
         flexDirection: 'row',

@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, FlatList, StyleSheet, TouchableOpacity, 
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Cores from './components/cores';
+import Color from './components/Colors.js';
 
 export default function App() {
   const [tarefas, setTarefas] = useState([]);
@@ -91,43 +91,37 @@ export default function App() {
   const verificarAtraso = (dataLimite) => {
     const dataAtual = new Date();
     const dataSeparada = dataLimite.split('/');
-    const dataTarefa = new Date(`${dataSeparada[2]}-${dataSeparada[1]}-${dataSeparada[0]}`);
-    
+    const dataTarefa = new Date(`${dataSeparada[2]}-${dataSeparada[1]}-${dataSeparada[0]}T23:59:59`);
+
     return dataTarefa < dataAtual;
   }
 
-  const tarefaAtrasada = verificarAtraso(item.dataLimite);
-  let estiloTarefa = styles.containerTarefas;
-  if (tarefaAtrasada && !item.concluida) {
-    estiloTarefa = { ...estiloTarefa, ...styles.containerTarefaAtrasada };
-  } if (!tarefaAtrasada && !item.concluida) {
-    estiloTarefa = { ...estiloTarefa, ...styles.containerTarefaAberta};
-  } else {
-    estiloTarefa = {...estiloTarefa, ...styles.tarefaCon}
-  }
-
-
   // Renderizar cada tarefa
-  const listarTarefas = ({ item }) => (
-    <View style={[
-      tarefaAtrasada ? styles.tarefaAtrasada : !item.concluida ? styles.containerTarefaAberta : styles.containerTarefaConcluida, 
-      styles.containerTarefas
-    ]}>
-      <Text style={[styles.descricaoTarefa, item.concluido && styles.concluidoText]}>
-        {item.descricao} - {item.dataLimite} - Prioridade: {item.nivelPrioridade}
-      </Text>
-      <View style={styles.btnContainer}>
+  const listarTarefas = ({ item }) => {
 
-        <TouchableOpacity onPress={() => concluirTarefa(item.id)}>
-          <Image style={styles.iconeTamanho} source={require('./assets/icons/finish-ico.png')} />
-        </TouchableOpacity>
+    const tarefaAtrasada = verificarAtraso(item.dataLimite);
 
-        <TouchableOpacity onPress={() => deletarTarefa(item.id)}>
-          <Image style={styles.iconeTamanho} source={require('./assets/icons/delete-ico.png')} />
-        </TouchableOpacity>
+    return (
+      <View style={[
+        tarefaAtrasada && !item.concluida ? styles.containerTarefaAtrasada : (!item.concluida ? styles.containerTarefaAberta : styles.containerTarefaConcluida),
+        styles.containerTarefas
+      ]}>
+        <Text style={[styles.descricaoTarefa, item.concluido && styles.concluidoText]}>
+          {item.descricao} - {item.dataLimite} - Prioridade: {item.nivelPrioridade}
+        </Text>
+        <View style={styles.btnContainer}>
+
+          <TouchableOpacity onPress={() => concluirTarefa(item.id)}>
+            <Image style={styles.iconeTamanho} source={require('./assets/icons/finish-ico.png')} />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => deletarTarefa(item.id)}>
+            <Image style={styles.iconeTamanho} source={require('./assets/icons/delete-ico.png')} />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
 
 
@@ -179,10 +173,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: Color.bgPalha,
   },
   tituloApp: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     marginTop: 40,
     marginBottom: 20,
@@ -191,7 +185,7 @@ const styles = StyleSheet.create({
   inputDescricao: {
     height: 50,
     borderWidth: 1,
-    borderColor: Cores.cinzaBorda,
+    borderColor: Color.cinzaBorda,
     padding: 10,
     marginBottom: 10,
     borderRadius: 5,
@@ -200,7 +194,7 @@ const styles = StyleSheet.create({
   inputData: {
     height: 50,
     borderWidth: 1,
-    borderColor: Cores.cinzaBorda,
+    borderColor: Color.cinzaBorda,
     padding: 10,
     marginBottom: 10,
     borderRadius: 5,
@@ -210,7 +204,7 @@ const styles = StyleSheet.create({
   inputNivelPrioridade: {
     height: 50,
     borderWidth: 1,
-    borderColor: Cores.cinzaBorda,
+    borderColor: Color.cinzaBorda,
     marginBottom: 10,
     borderRadius: 5,
     backgroundColor: '#fff',
@@ -235,10 +229,13 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
   },
   containerTarefaAberta: {
-    backgroundColor: Cores.branco,
+    backgroundColor: Color.branco,
+  },
+  containerTarefaAtrasada: {
+    backgroundColor: Color.bgTarefaAtrasada,
   },
   containerTarefaConcluida: {
-    backgroundColor: Cores.bgTarefaConcluida,
+    backgroundColor: Color.bgTarefaConcluida,
   },
   descricaoTarefa: {
     fontSize: 16,

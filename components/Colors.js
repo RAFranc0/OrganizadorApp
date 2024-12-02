@@ -1,4 +1,4 @@
-const cores = {
+const Color = {
     bgPalha: "rgba(255, 250, 227, 1)",
     bgTarefaAtrasada: "rgba(247, 86, 124, 1)",
     bgTarefaConcluida: "rgba(153, 225, 217, 0.6)",
@@ -8,4 +8,4 @@ const cores = {
     cinzaBorda: "rgba(188, 189, 192, 1)",
 }
 
-export default cores;
+export default Color;
