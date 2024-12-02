@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, FlatList, StyleSheet, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, TextInput, Button, FlatList, TouchableOpacity, Alert, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Color from './components/Colors.js';
+import styles from './src/Estilo';
 
 export default function App() {
   const [tarefas, setTarefas] = useState([]);
@@ -15,15 +15,6 @@ export default function App() {
 
 
   const CHAVE_ARMAZENAMENTO_TAREFAS = '@tarefas';
-
-  const calendario = (event, dataEscolhida) => {
-    setMostrarDatePicker(false);
-    if (dataEscolhida) {
-      setDataLimite(
-        dataEscolhida.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
-      );
-    }
-  };
 
   useEffect(() => {
     const carregarTarefas = async () => {
@@ -88,14 +79,6 @@ export default function App() {
     }
   }
 
-  const verificarAtraso = (dataLimite) => {
-    const dataAtual = new Date();
-    const dataSeparada = dataLimite.split('/');
-    const dataTarefa = new Date(`${dataSeparada[2]}-${dataSeparada[1]}-${dataSeparada[0]}T23:59:59`);
-
-    return dataTarefa < dataAtual;
-  }
-
   // Renderizar cada tarefa
   const listarTarefas = ({ item }) => {
 
@@ -123,6 +106,22 @@ export default function App() {
     );
   };
 
+  const calendario = (event, dataEscolhida) => {
+    setMostrarDatePicker(false);
+    if (dataEscolhida) {
+      setDataLimite(
+        dataEscolhida.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+      );
+    }
+  };
+
+  const verificarAtraso = (dataLimite) => {
+    const dataAtual = new Date();
+    const dataSeparada = dataLimite.split('/');
+    const dataTarefa = new Date(`${dataSeparada[2]}-${dataSeparada[1]}-${dataSeparada[0]}T23:59:59`);
+
+    return dataTarefa < dataAtual;
+  }
 
 
   return (
@@ -156,7 +155,12 @@ export default function App() {
           <Picker.Item label="Baixa" value="Baixa" />
         </Picker>
       </View>
-      <Button title="Adicionar Tarefa" onPress={adicionarTarefa} />
+
+      <View style={styles.addBtnBox}>
+        <TouchableOpacity style={styles.addTouchable} onPress={adicionarTarefa}>
+          <Image style={styles.iconeAdd} source={require('./assets/icons/add-ico.png')} />
+        </TouchableOpacity>
+      </View>
 
       {/* Lista de Tarefas */}
       <FlatList
@@ -169,89 +173,3 @@ export default function App() {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: Color.bgPalha,
-  },
-  tituloApp: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginTop: 40,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  inputDescricao: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: Color.cinzaBorda,
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
-    backgroundColor: '#fff',
-  },
-  inputData: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: Color.cinzaBorda,
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-  },
-  inputNivelPrioridade: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: Color.cinzaBorda,
-    marginBottom: 10,
-    borderRadius: 5,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
-    backgroundColor: '#fff',
-  },
-  listaTarefas: {
-    marginTop: 20,
-  },
-  containerTarefas: {
-    padding: 15,
-    borderRadius: 5,
-    marginBottom: 10,
-    borderWidth: 1,
-    borderColor: '#ccc',
-  },
-  containerTarefaAberta: {
-    backgroundColor: Color.branco,
-  },
-  containerTarefaAtrasada: {
-    backgroundColor: Color.bgTarefaAtrasada,
-  },
-  containerTarefaConcluida: {
-    backgroundColor: Color.bgTarefaConcluida,
-  },
-  descricaoTarefa: {
-    fontSize: 16,
-  },
-  concluidoText: {
-    textDecorationLine: 'line-through',
-    color: 'gray',
-  },
-  btnContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 10,
-  },
-  iconeTamanho: {
-    marginHorizontal: 10,
-    width: 35,
-    height: 35,
-  },
-});
